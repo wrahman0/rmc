@@ -620,8 +620,7 @@ def login():
         fbsr is None):
             # TODO(Sandy): redirect to landing page, or nothing
             # Shouldn't happen normally, user probably manually requested this page
-            logging.warn('No fbid/access_token specified')
-            return 'Error'
+            raise ApiError('No fbid/access_token specified')
 
     # Validate against Facebook's signed request
     if app.config['ENV'] == 'dev':
@@ -631,7 +630,7 @@ def login():
 
     if fb_data is None or fb_data['user_id'] != fbid:
         # Data is invalid
-        return 'Error'
+        raise ApiError('Invalid Facebook signed request')
 
     # FIXME[uw](mack): Someone could pass fake fb_access_token for an fbid, need to
     # validate on facebook before creating the user. (Sandy): See the note above on using signed_request
@@ -686,10 +685,14 @@ def login():
             },
         )
     except KeyError as ex:
+# TODO(Sandy): handle these exception cases more gracefully
         # Invalid key (shouldn't be happening)
-# TODO(Sandy): redirect to landing page, or nothing
         logging.error('Exception while saving user: %s' % ex)
-        return 'Error'
+        raise ApiError('KeyError when creating User object')
+    except Exception as ex:
+        logging.error('Exception while saving user: %s' % ex)
+        raise ApiError('Exception when creating User object')
+
     return ''
 
 
