@@ -32,20 +32,26 @@ function($, _, __, _util) {
       if (response.status === 'connected') {
         fbSignedRequest = response.authResponse.signedRequest;
         fbid = response.authResponse.userID;
-      } else if (response.status === 'not_authorized') {
-        // the user is logged in to Facebook, but didn't auth yet
-      } else {
-        // the user isn't logged in to Facebook.
       }
+      // else if (response.status === 'not_authorized') {
+      //   the user is logged in to Facebook, but didn't auth yet
+      // }
+      // else {
+      //   the user isn't logged in to Facebook.
+      // }
       fbApiInit = true;
     });
   };
 
   // Load the SDK's source Asynchronously
-  (function(d){
+  (function(d) {
     var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
-    if (d.getElementById(id)) {return;}
-    js = d.createElement('script'); js.id = id; js.async = true;
+    if (d.getElementById(id)) {
+      return;
+    }
+    js = d.createElement('script');
+    js.id = id;
+    js.async = true;
     js.src = '//connect.facebook.net/en_US/all.js';
     ref.parentNode.insertBefore(js, ref);
   }(document));
@@ -175,10 +181,12 @@ function($, _, __, _util) {
     }, options.callback);
   };
 
+  /* jshint -W101 */
   // Ensure FB is fully initialized before calling any of its APIs. Solution
   // from http://stackoverflow.com/questions/3548493/how-to-detect-when-facebooks-fb-init-is-complete
-  // TODO(mack): ensure that callbacks to fbEnsureInit() are queued/handled in same
-  // order they come in
+  // TODO(mack): ensure that callbacks to fbEnsureInit() are queued/handled in
+  // same order they come in
+  /* jshint +W101 */
   function fbEnsureInit(cb) {
     if(!fbApiInit) {
       window.setTimeout(function() {
@@ -207,7 +215,7 @@ function($, _, __, _util) {
 
   var checkAccessToken = function() {
     if (window.pageData.shouldRenewFbToken) {
-        renewAccessToken();
+      renewAccessToken();
     }
   };
 
